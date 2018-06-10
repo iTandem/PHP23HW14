@@ -1,17 +1,20 @@
 <?php
     
-    class User {
+    class User
+    {
         private $pdo;
         private $id;
         private $login;
         private $pass;
         private static $allowedColumns = ['id', 'login', 'password'];
         
-        public function __construct($pdo) {
+        public function __construct($pdo)
+        {
             $this->pdo = $pdo;
         }
         
-        public function findAll() {
+        public function findAll()
+        {
             $query = "SELECT * FROM user";
             
             $prepquery = $this->pdo->prepare($query);
@@ -39,8 +42,8 @@
         {
             $query = "SELECT * FROM user WHERE 1";
             
-            foreach(array_keys($columns) as $column) {
-                if(in_array($column, self::$allowedColumns)) {
+            foreach (array_keys($columns) as $column) {
+                if (in_array($column, self::$allowedColumns)) {
                     
                     $query .= " AND $column = :$column";
                 }
@@ -61,7 +64,6 @@
             $prepquery = $this->pdo->prepare($query);
             $prepquery->execute(['login' => $login, 'password' => $pass]);
         }
-        
         
         
     }

@@ -2,7 +2,10 @@
     require_once 'user.php';
     require_once 'controller.php';
     
-    if ($_POST['login'] ?? '' && $_POST['pass'] ?? '') {
+    $userName = isset($_POST['login']) ? $_POST['login'] : '';
+    $userPass = isset($_POST['pass']) ? $_POST['login'] : '';
+    
+    if ($userName && $userPass) {
         
         $login = $_POST['login'];
         $pass = $_POST['pass'];
@@ -16,8 +19,7 @@
             
             if ($selectedUser) {
                 $errorMsg = "Пользователь с таким именем уже зарегистрирован";
-            }
-            else {
+            } else {
                 $user->add($login, $pass);
             }
         } elseif ($_POST['action'] == 'Войти') {
@@ -25,7 +27,7 @@
                 'login' => $login,
                 'password' => $pass
             ]);
-            if($selectedUser) {
+            if ($selectedUser) {
                 $_SESSION['user'] = $selectedUser['id'];
                 header('Location:manager.php');
             } else {
@@ -33,35 +35,34 @@
             }
         }
     }
+    $err = isset($errorMsg) ? $errorMsg : '';
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Авторизация</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Авторизация</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
-    <div class="login">
-        <h2>Авторизация</h2>
-        <p class="error"><?= nl2br($errorMsg ?? '') ?></p>
-        
-        <form action="" method="post" accept-charset="utf-8">
-            <input type="text" name="login" value="<?= $_POST['login'] ?? '' ?>" placeholder="Логин" autofocus required>
-            <input type="password" name="pass" value="" placeholder="Пароль" required>
-            <input type="submit" name="action" value="Войти">
-            <input type="submit" name="action" value="Зарегистрироваться">
-        </form>
-    </div>
+  <div class="login">
+    <h2>Авторизация</h2>
+    <p class="error"><?= nl2br($err) ?></p>
+    <form action="" method="post" accept-charset="utf-8">
+      <input type="text" name="login" value="<?= $userName ?>" placeholder="Логин" autofocus required>
+      <input type="password" name="pass" value="" placeholder="Пароль" required>
+      <input type="submit" name="action" value="Войти">
+      <input type="submit" name="action" value="Зарегистрироваться">
+    </form>
+  </div>
 </div>
 </body>
 </html>
-    /**
-     * Created by PhpStorm.
-     * User: konstantin
-     * Date: 07.06.2018
-     * Time: 10:18
-     */
+/**
+* Created by PhpStorm.
+* User: konstantin
+* Date: 07.06.2018
+* Time: 10:18
+*/

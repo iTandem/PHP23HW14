@@ -4,11 +4,10 @@
     
     session_start();
     
-    // local database
     $host = 'localhost';
-    $dbname = 'netology';
-    $user = 'root';
-    $pass = 'php23net';
+    $dbname = 'cibizov';
+    $user = 'cibizov';
+    $pass = 'neto1762';
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ];
@@ -16,40 +15,40 @@
     $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
     $pdo = new PDO($dsn, $user, $pass, $options);
     
-    // Task manager page
-    if ($_SESSION['user'] ?? '') {
+    $LOG = isset($_SESSION['user']) ? $_SESSION['user'] : '';
+    if ($LOG) {
         
         $users = new User($pdo);
         $userId = $_SESSION['user'];
         $user = $users->find($userId);
         
-        $descr = $_POST['description'] ?? '';
-        $doneId = $_POST['done'] ?? '';
-        $deleteId = $_POST['delete'] ?? '';
-        $editId = $_POST['editId'] ?? '';
-        $assignId = $_POST['assign'] ?? '';
-        $assignedUserId = $_POST['assignedUser'] ?? '';
+        $descr = isset($_POST['description']) ? $_POST['description'] : '';
+        $doneId = isset($_POST['done']) ? $_POST['done'] : '';
+        $deleteId = isset($_POST['delete']) ? $_POST['delete'] : '';
+        $editId = isset($_POST['editId']) ? $_POST['editId'] : '';
+        $assignId = isset($_POST['assign']) ? $_POST['assign'] : '';
+        $assignedUserId = isset($_POST['assignedUser']) ? $_POST['assignedUser'] : '';
         
         $task = new Task($pdo);
         
-        if($descr) {
-            if($editId) {
+        if ($descr) {
+            if ($editId) {
                 $task->updateTask($editId, $descr);
             } else {
                 $task->insertTask($userId, $descr);
             }
         }
-        if($doneId) {
+        if ($doneId) {
             $task->completeTask($doneId);
         }
-        if($deleteId) {
+        if ($deleteId) {
             $task->deleteTask($deleteId);
         }
         if ($assignedUserId) {
             $task->assignTask($assignId, $assignedUserId);
         }
         
-        $columnOrder = $_POST['column'] ?? 'id asc';
+        $columnOrder = isset($_POST['column']) ? $_POST['column'] : 'id asc';
         $myTasks = $task->findByUserOrderBy($userId, $columnOrder);
         $assignedTasks = $task->findByAssignedUserOrderBy($userId, $columnOrder);
     }
